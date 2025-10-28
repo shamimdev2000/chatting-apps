@@ -3,10 +3,14 @@ import login from "../../assets/login.png";
 import google from "../../assets/google.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
+import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const Login = () => {
-    const [show,setShow] = useState ("")
+  const auth = getAuth();
+  const navigate = useNavigate()
+  const [show, setShow] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
@@ -42,10 +46,46 @@ const Login = () => {
         );
       }
     }
+    if (
+      email &&
+      password &&
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
+    ){
+      signInWithEmailAndPassword(auth, email, password)
+        .then((user) => {
+        console.log(user,"login");
+        setTimeout(()=>{
+          navigate("/")
+        },2000)
+        toast.success("Your Login Successfully Done")
+
+        
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          if(errorCode.incudes("auth/invalid-credential")){
+            toast.error("please give right email & password")
+          }
+        });
+    }
+      
   };
 
   return (
     <div className="flex px-[10px] ">
+      <ToastContainer
+              position="top-center"
+              autoClose={5000}
+              hideProgressBar={false}
+              newestOnTop={false}
+              closeOnClick={false}
+              rtl={false}
+              pauseOnFocusLoss
+              draggable
+              pauseOnHover
+              theme="light"
+              transition={Bounce}
+            />
       <div className="w-[50%] md:ml-[190px] mt-[80px]">
         <h3 className="md:w-[497px] md:text-[34px] font-bold font-nunito text-[#11175D] ">
           Login to your account!
@@ -71,19 +111,21 @@ const Login = () => {
         </div>
 
         <div className="relative mt-[30px]">
-          <p className="absolute top-[-8px] md:left-[30px] bg-white px-1 text-[13px] text-[#11175D] md:tracking-[2px] font-nunito font-semibold ">
+          <p className=" absolute top-[-8px] md:left-[30px] bg-white px-1 text-[13px] text-[#11175D] md:tracking-[2px] font-nunito font-semibold ">
             Password
           </p>
           <input
-            type= {show ? "text" : "password"}
+            type={show ? "text" : "password"}
             onChange={handlePassword}
             className="py-[20px] pr-[90px] md:pr-[150px] md:pl-[30px] text-[10px] border-b-1 outline-none border-[#11175D]"
             placeholder="Your Password"
           />
           <div className="absolute top-[25px] right-[300px]">
-            {
-                show ?  <FaEyeSlash onClick={()=> setShow (!show)} /> : <FaEye onClick={()=> setShow (!show)} />
-            }
+            {show ? (
+              <FaEyeSlash onClick={() => setShow(!show)} />
+            ) : (
+              <FaEye onClick={() => setShow(!show)} />
+            )}
           </div>
           <p className="bg-blue-600 text-[12px] text-white  mt-0.5 pl-1.5 rounded-[8px] w-[190px] md:w-[270px]">
             {passwordError}
@@ -95,12 +137,15 @@ const Login = () => {
         >
           Login to Continue
         </button>
-        <p className="mt-[15px] ml-[10px] text-[10px] md:text-[13px] font-nunito">
+        <Link to="/forgotPassword"><p className="mt-[10px] cursor-pointer font-medium ml-[100px] text-[#EA6C00] font-nunito">
+          Forgot Password</p></Link>
+        <p className="mt-[15px] ml-[70px] text-[10px] md:text-[13px] font-nunito">
           Don’t have an account ?{" "}
           <Link to="/registration">
-          <span className="text-[#EA6C00] text-[13px] font-nunito ">
-            Sign Up
-          </span></Link>
+            <span className="text-[#EA6C00] text-[13px] font-nunito ">
+              Sign Up
+            </span>
+          </Link>
         </p>
       </div>
       <div className="w-[50%]">

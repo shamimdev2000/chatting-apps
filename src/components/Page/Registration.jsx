@@ -4,12 +4,13 @@ import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
 import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
- import { Bounce, ToastContainer, toast } from 'react-toastify';
+import { Bounce, ToastContainer, toast } from "react-toastify";
+import { DNA } from 'react-loader-spinner'
 
 const Registration = () => {
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const auth = getAuth();
-  const [show,setShow] = useState ("")
+  const [show, setShow] = useState("");
   const [email, setEmail] = useState("");
   const [fullName, setfullName] = useState("");
   const [password, setPassword] = useState("");
@@ -17,7 +18,7 @@ const Registration = () => {
   const [emailError, setEmailError] = useState("");
   const [fullNameError, setFullNameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
-  const [loading,setLoading] = useState (false)
+  const [loading, setLoading] = useState(false);
 
   const handleEmail = (e) => {
     setEmail(e.target.value);
@@ -57,45 +58,55 @@ const Registration = () => {
         );
       }
     }
-    if(email && fullName && password && (/^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/)){
-      setLoading(true)
-      setLoading(true)
+    if (
+      email &&
+      fullName &&
+      password &&
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
+    ) {
+      
+      setLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
-  .then((user) => {
-      console.log(user,"user");
-      toast.success("Registration succesfully done")
-      setTimeout(()=>{
-          navigate("/login")
-      },2000)
-    setLoading(false)
-    setEmail("")
-    setfullName("")
-    setPassword("")
-  })
-  .catch((error) => {
-    const errorCode = error.code;
-    toast.error("Your Email is Already in Use")
-    const errorMessage = error.message;
-    
-  });
+        .then((user) => {
+          //  sendEmailVerification(auth.currentUser)
+          console.log(user, "user");
+          toast.success("Registration succesfully done");
+          setTimeout(() => {
+            navigate("/login");
+          }, 2000);
+          setLoading(false);
+          setEmail("");
+          setfullName("");
+          setPassword("");
+        })
+        .catch((error) => {
+          const errorCode = error.code;
+          console.log(errorCode);
+          if(errorCode.includes("auth/email-already-in-use")){
+ toast.error("Your Email is Already in Use");
+          }
+          
+          // const errorMessage = error.message;
+          setLoading(false)
+        });
     }
   };
 
   return (
     <div className="flex px-[10px]">
       <ToastContainer
-position="top-center"
-autoClose={5000}
-hideProgressBar={false}
-newestOnTop={false}
-closeOnClick={false}
-rtl={false}
-pauseOnFocusLoss
-draggable
-pauseOnHover
-theme="light"
-transition={Bounce}
-/>
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="w-[50%] md:ml-[190px] mt-[60px] md:mt-[80px]">
         <h3 className="md:w-[497px] md:text-[34px] font-bold font-nunito text-[#11175D] ">
           Get started with easily register
@@ -144,10 +155,10 @@ transition={Bounce}
             type={show ? "text" : "password"}
             onChange={handlePassword}
             value={password}
-            className="text-[10px] md:text-[16px] py-[10px] md:py-[20px] pr-[70px] md:pr-[55px] md:pl-[30px] border-2 border-[#11175D] rounded-[8px] outline-0 "
+            className="text-[10px] md:text-[16px] py-[10px] md:py-[20px] pr-[70px] md:pr-[55px] md:pl-[30px] border-2 border-[#11175D] rounded-[8px] outline-0 relative "
             placeholder="Your Password"
           />
-          <div className="absolute top-[29px] right-[320px]">
+          <div className="absolute top-[40%] left-[250px]">
             {show ? (
               <FaEyeSlash onClick={() => setShow(!show)} />
             ) : (
@@ -158,28 +169,29 @@ transition={Bounce}
             {passwordError}
           </p>
         </div>
-        {
-          loading ?
-          "loading" :
+        {loading ?
+          <DNA
+            visible={true}
+            height="80"
+            width="80"
+            ariaLabel="dna-loading"
+            wrapperStyle={{}}
+            wrapperClass="dna-wrapper"
+          />
+          : 
           <button
-          onClick={handlesignUp}
-          className=" py-[10px] md:py-[16px] px-[65px] md:px-[100px] md:text-[20px] font-semibold font-nunito mt-[30px] bg-[#1E1E1E] text-white rounded-[85px] cursor-pointer "
-        >
-          Sign up
-        </button>
+            onClick={handlesignUp}
+            className=" py-[10px] md:py-[16px] px-[65px] md:px-[100px] md:text-[20px] font-semibold font-nunito mt-[30px] bg-[#1E1E1E] text-white rounded-[85px] cursor-pointer">
+            Sign up
+          </button>
         }
-        <button
-          onClick={handlesignUp}
-          className=" py-[10px] md:py-[16px] px-[65px] md:px-[100px] md:text-[20px] font-semibold font-nunito mt-[30px] bg-[#1E1E1E] text-white rounded-[85px] cursor-pointer "
-        >
-          Sign up
-        </button>
-        <p className="mt-[15px] ml-[10px] text-[10px] md:text-[13px] font-nunito">
+        <p className="mt-[20px] ml-[23px] text-[10px] md:text-[13px] font-nunito">
           Already have an account ?{" "}
           <Link to="/login">
-          <span className="text-[#EA6C00] text-[13px] font-nunito ">
-            Sign In
-          </span></Link>
+            <span className="text-[#EA6C00] text-[13px] font-nunito">
+              Sign In
+            </span>
+          </Link>
         </p>
       </div>
       <div className="w-[50%]">
