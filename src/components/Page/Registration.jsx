@@ -3,7 +3,7 @@ import registration from "../../assets/registration.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
-import { getAuth, createUserWithEmailAndPassword } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { DNA } from 'react-loader-spinner'
 
@@ -68,9 +68,9 @@ const Registration = () => {
       setLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then((user) => {
-          //  sendEmailVerification(auth.currentUser)
+           sendEmailVerification(auth.currentUser)
           console.log(user, "user");
-          toast.success("Registration succesfully done");
+          toast.success("Registration succesfully done,pls verify your email");
           setTimeout(() => {
             navigate("/login");
           }, 2000);
@@ -86,7 +86,7 @@ const Registration = () => {
  toast.error("Your Email is Already in Use");
           }
           
-          // const errorMessage = error.message;
+          const errorMessage = error.message;
           setLoading(false)
         });
     }
@@ -148,7 +148,7 @@ const Registration = () => {
           </p>
         </div>
         <div className="relative mt-[30px]">
-          <p className="absolute top-[-8px] left-[30px] bg-white px-1 text-[13px] text-[#11175D] md:tracking-[2px] font-nunito font-semibold ">
+          <p className="absolute top-[-8px] left-[30px] bg-white px-1 text-[13px] text-[#11175D] tracking-[2px] font-nunito font-semibold ">
             Password
           </p>
           <input
@@ -158,7 +158,7 @@ const Registration = () => {
             className="text-[10px] md:text-[16px] py-[10px] md:py-[20px] pr-[70px] md:pr-[55px] md:pl-[30px] border-2 border-[#11175D] rounded-[8px] outline-0 relative "
             placeholder="Your Password"
           />
-          <div className="absolute top-[40%] left-[250px]">
+          <div className="absolute top-[40%] left-[240px]">
             {show ? (
               <FaEyeSlash onClick={() => setShow(!show)} />
             ) : (

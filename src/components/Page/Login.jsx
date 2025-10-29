@@ -4,11 +4,12 @@ import google from "../../assets/google.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
-import { getAuth, signInWithEmailAndPassword } from "firebase/auth";
+import { getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Bounce, ToastContainer, toast } from "react-toastify";
-
+import { GoogleAuthProvider } from "firebase/auth";
 const Login = () => {
   const auth = getAuth();
+  const provider = new GoogleAuthProvider();
   const navigate = useNavigate()
   const [show, setShow] = useState("");
   const [email, setEmail] = useState("");
@@ -46,10 +47,7 @@ const Login = () => {
         );
       }
     }
-    if (
-      email &&
-      password &&
-      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
+    if (email && password && /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
     ){
       signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
@@ -70,6 +68,18 @@ const Login = () => {
     }
       
   };
+  const handleGoogleSignIn = ()=>{
+  signInWithPopup(auth, provider)
+  .then((user) => {
+    console.log(user);
+    
+  }).catch((error) => {
+    const errorCode = error.code;
+    console.log(errorCode);
+    
+    
+  });
+  }
 
   return (
     <div className="flex px-[10px] ">
@@ -91,7 +101,7 @@ const Login = () => {
           Login to your account!
         </h3>
         <p className="mt-[13px] w-[180px]">
-          <img src={google} alt="" />
+          <img onClick={handleGoogleSignIn} src={google} alt="" />
         </p>
         <div className="relative mt-[30px]">
           <p className="absolute top-[-8px] md:left-[30px] bg-white px-1 text-[13px] text-[#11175D] md:tracking-[2px] font-nunito font-semibold ">
