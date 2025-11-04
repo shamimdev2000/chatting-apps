@@ -19,7 +19,7 @@ const ForgotPassword = () => {
         setEmailError("Your Valid Email is Requred");
       }
     }
-    if (email && password && /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
+    if (email && /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
         ){
           sendPasswordResetEmail(auth, email)
   .then((user) => {

@@ -7,8 +7,11 @@ import { Link, useNavigate } from "react-router";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { GoogleAuthProvider } from "firebase/auth";
+import { useDispatch } from "react-redux";
+import { userInfo } from "../../Slices/userSlice";
 const Login = () => {
   const auth = getAuth();
+  const dispatch =useDispatch()
   const provider = new GoogleAuthProvider();
   const navigate = useNavigate()
   const [show, setShow] = useState("");
@@ -52,6 +55,7 @@ const Login = () => {
       signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
         console.log(user,"login");
+        dispatch(userInfo(user.user))
         setTimeout(()=>{
           navigate("/")
         },2000)
