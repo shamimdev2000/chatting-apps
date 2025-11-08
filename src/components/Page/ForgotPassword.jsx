@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router";
 import { getAuth, sendPasswordResetEmail } from "firebase/auth";
-
+import abc from "../../assets/abc.png"
 const ForgotPassword = () => {
   const auth = getAuth();
      const [email, setEmail] = useState("");
@@ -35,24 +35,26 @@ const ForgotPassword = () => {
         }
     }
   return (
-    <div className="bg-gray-400 w-[600px] px-[20px] py-[100px] mx-auto mt-[100px] rounded-2xl">
-      <div>
-        <h2 className="text-3xl font-bold ml-40">Forgot Password</h2>
+      <div
+          className="h-screen w-full bg-no-repeat bg-cover bg-center flex justify-center items-center"
+          style={{ backgroundImage: `url(${abc})` }}>
+      <div className="bg-white/10 backdrop-blur-md border border-white/30 rounded-2xl shadow-lg p-8 w-[90%] max-w-sm text-white">
+        <h2 className="text-3xl font-bold text-center">Forgot Password</h2>
         <input
             type="email"
             onChange={handleEmail}
             value={email}
-            className="text-[16px] py-[20px] pr-[70px] pl-[30px] border-2 border-[#000000] rounded-[8px] outline-0 mt-7 ml-35"
+            className="text-[16px] py-[20px] pr-[70px] pl-[30px] border rounded-[8px] outline-0 mt-4.5 ml-3.5"
             placeholder="Enter Your Email Address"
           />
-             <p className="bg-blue-600 text-[12px] text-white mt-0.5 ml-[140px] rounded-[8px] px-1.5  w-[190px] md:w-[280px]">
+             <p className="text-[12px] text-white mt-0.5 ml-[15px] rounded-[8px] px-1.5  w-[190px] md:w-[280px]">
             {emailError}
           </p>
         <div className="text-center space-x-[20px] mt-[30px]">
           <button
           onClick={handleResetPassword} 
-           className="bg-gray-600 cursor-pointer hover:bg-cyan-950 px-[5px] py-[7px] rounded-[8px]">Reset Password </button>
-          <Link to="/login" className="bg-gray-600 cursor-pointer hover:bg-cyan-950 px-[5px] py-[7px] rounded-[8px]"> Go Back </Link>
+           className="bg-cyan-950 cursor-pointer hover:bg-[#D45455] px-[5px] py-[7px] rounded-[8px]">Reset Password </button>
+          <Link to="/login" className="bg-cyan-950 cursor-pointer hover:bg-[#D45455] px-[5px] py-[7px] rounded-[8px]"> Go Back </Link>
          </div>
 
       </div>

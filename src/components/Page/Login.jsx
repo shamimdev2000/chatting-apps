@@ -4,16 +4,20 @@ import google from "../../assets/google.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
-import { getAuth, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import {
+  getAuth,
+  signInWithEmailAndPassword,
+  signInWithPopup,
+} from "firebase/auth";
 import { Bounce, ToastContainer, toast } from "react-toastify";
 import { GoogleAuthProvider } from "firebase/auth";
 import { useDispatch } from "react-redux";
 import { userInfo } from "../../Slices/userSlice";
 const Login = () => {
   const auth = getAuth();
-  const dispatch =useDispatch()
+  const dispatch = useDispatch();
   const provider = new GoogleAuthProvider();
-  const navigate = useNavigate()
+  const navigate = useNavigate();
   const [show, setShow] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -50,57 +54,55 @@ const Login = () => {
         );
       }
     }
-    if (email && password && /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
-    ){
+    if (
+      email &&
+      password &&
+      /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
+    ) {
       signInWithEmailAndPassword(auth, email, password)
         .then((user) => {
-        console.log(user,"login");
-        dispatch(userInfo(user.user))
-        localStorage.setItem("userInfo" ,JSON.stringify(user))
-        setTimeout(()=>{
-          navigate("/")
-        },2000)
-        toast.success("Your Login Successfully Done")
-
-        
+          console.log(user, "login");
+          dispatch(userInfo(user.user));
+          localStorage.setItem("userInfo", JSON.stringify(user));
+          setTimeout(() => {
+            navigate("/");
+          }, 2000);
+          toast.success("Your Login Successfully Done");
         })
         .catch((error) => {
           const errorCode = error.code;
-          if(errorCode.incudes("auth/invalid-credential")){
-            toast.error("please give right email & password")
+          if (errorCode.incudes("auth/invalid-credential")) {
+            toast.error("please give right email & password");
           }
         });
     }
-      
   };
-  const handleGoogleSignIn = ()=>{
-  signInWithPopup(auth, provider)
-  .then((user) => {
-    console.log(user);
-    
-  }).catch((error) => {
-    const errorCode = error.code;
-    console.log(errorCode);
-    
-    
-  });
-  }
+  const handleGoogleSignIn = () => {
+    signInWithPopup(auth, provider)
+      .then((user) => {
+        console.log(user);
+      })
+      .catch((error) => {
+        const errorCode = error.code;
+        console.log(errorCode);
+      });
+  };
 
   return (
     <div className="flex px-[10px] ">
       <ToastContainer
-              position="top-center"
-              autoClose={5000}
-              hideProgressBar={false}
-              newestOnTop={false}
-              closeOnClick={false}
-              rtl={false}
-              pauseOnFocusLoss
-              draggable
-              pauseOnHover
-              theme="light"
-              transition={Bounce}
-            />
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme="light"
+        transition={Bounce}
+      />
       <div className="w-[50%] md:ml-[190px] mt-[80px]">
         <h3 className="md:w-[497px] md:text-[34px] font-bold font-nunito text-[#11175D] ">
           Login to your account!
@@ -117,7 +119,7 @@ const Login = () => {
             type="email"
             onChange={handleEmail}
             value={email}
-            className="py-[20px] pr-[90px] md:pr-[150px] md:pl-[30px] text-[10px] border-b-1 outline-none border-[#11175D]"
+            className="py-[20px] pr-[90px] md:pr-[150px] md:pl-[40px] text-[10px] md:text-[16px] border-b-1 outline-none border-[#11175D]"
             placeholder="Enter Your Email Address"
           />
           <p className="bg-blue-600 text-[12px] text-white mt-0.5 pl-1.5 rounded-[8px]  w-[190px] md:w-[270px]">
@@ -132,10 +134,11 @@ const Login = () => {
           <input
             type={show ? "text" : "password"}
             onChange={handlePassword}
-            className="py-[20px] pr-[90px] md:pr-[150px] md:pl-[30px] text-[10px] border-b-1 outline-none border-[#11175D]"
+            value={password}
+            className="text-[10px] md:text-[16px] py-[10px] md:py-[20px] pr-[90px] md:pr-[150px] md:pl-[30px] border-b border-[#11175D] outline-0 relative "
             placeholder="Your Password"
           />
-          <div className="absolute top-[25px] right-[300px]">
+          <div className="absolute top-[40%] left-[310px]">
             {show ? (
               <FaEyeSlash onClick={() => setShow(!show)} />
             ) : (
@@ -152,8 +155,11 @@ const Login = () => {
         >
           Login to Continue
         </button>
-        <Link to="/forgotPassword"><p className="mt-[10px] cursor-pointer font-medium ml-[100px] text-[#EA6C00] font-nunito">
-          Forgot Password</p></Link>
+        <Link to="/forgotPassword">
+          <p className="mt-[10px] cursor-pointer font-medium ml-[100px] text-[#EA6C00] font-nunito">
+            Forgot Password
+          </p>
+        </Link>
         <p className="mt-[15px] ml-[70px] text-[10px] md:text-[13px] font-nunito">
           Don’t have an account ?{" "}
           <Link to="/registration">

@@ -148,7 +148,7 @@ const Registration = () => {
           </p>
         </div>
         <div className="relative mt-[30px]">
-          <p className="absolute top-[-8px] left-[30px] bg-white px-1 text-[13px] text-[#11175D] tracking-[2px] font-nunito font-semibold ">
+          <p className="absolute top-[-8px] left-[30px] z-9999 bg-white px-1 text-[13px] text-[#11175D] tracking-[2px] font-nunito font-semibold ">
             Password
           </p>
           <input
