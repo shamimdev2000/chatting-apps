@@ -3,13 +3,20 @@ import registration from "../../assets/registration.png";
 import { FaEyeSlash } from "react-icons/fa";
 import { FaEye } from "react-icons/fa";
 import { Link, useNavigate } from "react-router";
-import { getAuth, createUserWithEmailAndPassword, sendEmailVerification } from "firebase/auth";
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  sendEmailVerification,
+  updateProfile,
+} from "firebase/auth";
 import { Bounce, ToastContainer, toast } from "react-toastify";
-import { DNA } from 'react-loader-spinner'
+import { DNA } from "react-loader-spinner";
+import { getDatabase, ref, set } from "firebase/database";
 
 const Registration = () => {
   const navigate = useNavigate();
   const auth = getAuth();
+  const db = getDatabase();
   const [show, setShow] = useState("");
   const [email, setEmail] = useState("");
   const [fullName, setfullName] = useState("");
@@ -64,17 +71,25 @@ const Registration = () => {
       password &&
       /^(((?=.*[a-z])(?=.*[A-Z]))|((?=.*[a-z])(?=.*[0-9]))|((?=.*[A-Z])(?=.*[0-9])))(?=.{8,})/
     ) {
-      
       setLoading(true);
       createUserWithEmailAndPassword(auth, email, password)
         .then((user) => {
-           sendEmailVerification(auth.currentUser)
+          sendEmailVerification(auth.currentUser);
           console.log(user, "user");
+          updateProfile(auth.currentUser, {
+            displayName: fullName,
+          })
           toast.success("Registration succesfully done,pls verify your email");
+          set(ref(db, "users/" + user.user.uid), {
+            username: fullName,
+            email: email,
+            password: password,
+          });
           setTimeout(() => {
             navigate("/login");
           }, 2000);
           setLoading(false);
+
           setEmail("");
           setfullName("");
           setPassword("");
@@ -82,12 +97,12 @@ const Registration = () => {
         .catch((error) => {
           const errorCode = error.code;
           console.log(errorCode);
-          if(errorCode.includes("auth/email-already-in-use")){
- toast.error("Your Email is Already in Use");
+          if (errorCode.includes("auth/email-already-in-use")) {
+            toast.error("Your Email is Already in Use");
           }
-          
+
           const errorMessage = error.message;
-          setLoading(false)
+          setLoading(false);
         });
     }
   };
@@ -169,7 +184,7 @@ const Registration = () => {
             {passwordError}
           </p>
         </div>
-        {loading ?
+        {loading ? (
           <DNA
             visible={true}
             height="80"
@@ -178,13 +193,14 @@ const Registration = () => {
             wrapperStyle={{}}
             wrapperClass="dna-wrapper"
           />
-          : 
+        ) : (
           <button
             onClick={handlesignUp}
-            className=" py-[10px] md:py-[16px] px-[65px] md:px-[100px] md:text-[20px] font-semibold font-nunito mt-[30px] bg-[#1E1E1E] text-white rounded-[85px] cursor-pointer">
+            className=" py-[10px] md:py-[16px] px-[65px] md:px-[100px] md:text-[20px] font-semibold font-nunito mt-[30px] bg-[#1E1E1E] text-white rounded-[85px] cursor-pointer"
+          >
             Sign up
           </button>
-        }
+        )}
         <p className="mt-[20px] ml-[23px] text-[10px] md:text-[13px] font-nunito">
           Already have an account ?{" "}
           <Link to="/login">

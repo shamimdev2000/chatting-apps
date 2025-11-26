@@ -1,7 +1,8 @@
 import { initializeApp } from "firebase/app";
 const firebaseConfig = {
-  apiKey: "AIzaSyA0EgCHWsiwHbW1AA27FCl9caTT0pPWN2c",
+    apiKey: "AIzaSyA0EgCHWsiwHbW1AA27FCl9caTT0pPWN2c",
   authDomain: "postmaster-1108d.firebaseapp.com",
+  databaseURL: "https://postmaster-1108d-default-rtdb.firebaseio.com",
   projectId: "postmaster-1108d",
   storageBucket: "postmaster-1108d.firebasestorage.app",
   messagingSenderId: "329607739079",
