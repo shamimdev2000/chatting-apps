@@ -7,9 +7,12 @@ import { ImExit } from "react-icons/im";
 import { getAuth, signOut } from "firebase/auth";
 import { useNavigate } from "react-router";
 import { useDispatch, useSelector } from "react-redux";
+import { userInfo } from '../../Slices/userSlice';
 
 const Sidebar = () => {
-  const data = useSelector((selector)=>(selector.userInfo.value))
+  const data = useSelector((state)=>(state.user.value))
+  console.log(data);
+  
   const dispatch = useDispatch()
   const auth = getAuth();
   const navigate = useNavigate()
@@ -31,7 +34,7 @@ const Sidebar = () => {
         <img src={profile} alt="" />
        </div>
        <div className='flex justify-center mt-2 font-bold text-xl'>
-        <h2>{data.displayName}</h2>
+        <h2>{data?.displayName || data?.user?.displayName}</h2>
        </div>
        <div  className="relative">
         <div className=' absolute after:absolute after:content-[""] after:top-0 after:right-[25px] after:h-full after:w-[10px] after:bg-[#1E1E1E] after:rounded-tl-[20px] after:rounded-bl-[20px] after:r left-[25px] mt-[50px] w-full pl-[45px] text-[#1E1E1E] text-[46px]  bg-white rounded-lg py-[20px] cursor-pointer  '>
