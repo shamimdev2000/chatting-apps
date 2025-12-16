@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { BsThreeDotsVertical } from "react-icons/bs";
 import user from "../../assets/user.png";
-import { getDatabase, ref, onValue } from "firebase/database";
+import { getDatabase, ref, onValue, set, push } from "firebase/database";
 import { useSelector } from 'react-redux';
 import { IoRefresh } from 'react-icons/io5';
 
@@ -17,7 +17,7 @@ const UserList = () => {
   let arr = []
    snapshot.forEach((item)=>{
     if(data?.uid !== item.key){
-      arr.push(item?.val());
+      arr.push({...item?.val(),userId:item.key});
     }
    })
    setUserList(arr);
@@ -26,10 +26,14 @@ const UserList = () => {
 console.log(userList);
 const handleFriendRequest = (item)=>{
   console.log("ok",item);
-  set(ref(db, 'friendRequest/' ),{
+  console.log(data);
+  
+  set(push(ref(db, 'friendRequest/')),{
 
-    senderName: data.dispalyName,
-    receiverName: item.userName
+    senderName: data.displayName,
+    senderId: data.uid,
+    receiverName: item.username,
+    receiverId: item.userId,
   })
 }
 
